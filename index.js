@@ -9,7 +9,7 @@ const app = express();
 
 // express middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 
 // connect to database
 const db = mysql.createConnection(
@@ -103,43 +103,41 @@ db.query('SELECT * FROM employee', function (err, results) {
 });
 
 // create employee
-app.post('/api/employees', (req, res) => {
-  db.query(
-    'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)',
-    [
-      req.body.first_name,
-      req.body.last_name,
-      req.body.role_id,
-      req.body.manager_id,
-    ],
-    (err, data) => {
-      if (err) {
-        res.send(err);
-      } else {
-        res.send(data);
-      }
-    }
-  );
-});
+// db.query(
+//   'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)',
+//   [
+//     req.body.first_name,
+//     req.body.last_name,
+//     req.body.role_id,
+//     req.body.manager_id,
+//   ],
+//   (err, data) => {
+//     if (err) {
+//       res.send(err);
+//     } else {
+//       res.send(data);
+//     }
+//   }
+// );
 
 // update employee
-db.query(
-  'UPDATE employee SET first_name =?, last_name =?, role_id =?, manager_id =? WHERE id =?',
-  [
-    req.body.first_name,
-    req.body.last_name,
-    req.body.role_id,
-    req.body.manager_id,
-    req.body.id,
-  ],
-  (err, data) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send(data);
-    }
-  }
-);
+// db.query(
+//   'UPDATE employee SET first_name =?, last_name =?, role_id =?, manager_id =? WHERE id =?',
+//   [
+//     req.body.first_name,
+//     req.body.last_name,
+//     req.body.role_id,
+//     req.body.manager_id,
+//     req.body.id,
+//   ],
+//   (err, data) => {
+//     if (err) {
+//       res.send(err);
+//     } else {
+//       res.send(data);
+//     }
+//   }
+// );
 
 // delete employee
 db.query('DELETE FROM employee WHERE id =?', [1], (err, data) => {
@@ -151,42 +149,51 @@ db.query('DELETE FROM employee WHERE id =?', [1], (err, data) => {
 });
 
 // create role
-app.post('/api/roles', (req, res) => {
-  db.query(
-    'INSERT INTO role (title, salary, department_id) VALUES (?,?,?)',
-    [req.body.title, req.body.salary, req.body.department_id],
-    (err, data) => {
-      if (err) {
-        res.send(err);
-      } else {
-        res.send(data);
-      }
-    }
-  );
+// app.post('/api/roles', (req, res) => {
+//   db.query(
+//     'INSERT INTO role (title, salary, department_id) VALUES (?,?,?)',
+//     [req.body.title, req.body.salary, req.body.department_id],
+//     (err, data) => {
+//       if (err) {
+//         res.send(err);
+//       } else {
+//         res.send(data);
+//       }
+//     }
+//   );
+// });
+
+// // update role
+// app.put('/api/roles/:id', (req, res) => {
+//   db.query(
+//     'UPDATE role SET title =?, salary =?, department_id =? WHERE id =?',
+//     [req.body.title, req.body.salary, req.body.department_id, req.params.id],
+//     (err, data) => {
+//       if (err) {
+//         res.send(err);
+//       } else {
+//         res.send(data);
+//       }
+//     }
+//   );
+// });
+
+// // delete role
+// app.delete('/api/roles/:id', (req, res) => {
+//   db.query('DELETE FROM role WHERE id =?', req.params.id, (err, data) => {
+//     if (err) {
+//       res.send(err);
+//     } else {
+//       res.send(data);
+//     }
+//   });
+// });
+
+// Default response for any other request (Not Found)
+app.use((req, res) => {
+  res.status(404).end();
 });
 
-// update role
-app.put('/api/roles/:id', (req, res) => {
-  db.query(
-    'UPDATE role SET title =?, salary =?, department_id =? WHERE id =?',
-    [req.body.title, req.body.salary, req.body.department_id, req.params.id],
-    (err, data) => {
-      if (err) {
-        res.send(err);
-      } else {
-        res.send(data);
-      }
-    }
-  );
-});
-
-// delete role
-app.delete('/api/roles/:id', (req, res) => {
-  db.query('DELETE FROM role WHERE id =?', req.params.id, (err, data) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send(data);
-    }
-  });
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
