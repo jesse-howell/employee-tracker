@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "node db/seeds.sql",
+    "start": "node server",
+    "schema": "node db/schema.sql"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +15,8 @@
   "dependencies": {
     "express": "^4.19.1",
     "inquirer": "^8.2.4",
-    "mysql2": "^3.9.2"
+    "mysql2": "^3.9.2",
+    "seed": "^0.4.4",
+    "start": "^5.1.0"
   }
 }
