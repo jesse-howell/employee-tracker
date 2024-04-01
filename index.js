@@ -1,199 +1,76 @@
-// import and require express and mysql
-const express = require('express');
+// import inquirer and mysql
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
-
-// create express app
-const PORT = process.env.PORT || 3001;
-const app = express();
-
-// express middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 
 // connect to database
 const db = mysql.createConnection(
   {
     host: 'localhost',
     user: 'root',
-    // password: 'root',
     database: 'employee_db',
   },
   console.log('Connected to the employee_db database.')
 );
 
-// query department table in database
-db.query('SELECT * FROM department', function (err, results) {
-  console.log(results);
-});
-
-// create department
-db.query('INSERT INTO department (name) VALUES (?)', ['Sales'], (err, data) => {
-  if (err) {
-    res.send(err);
-  } else {
-    res.send(data);
-  }
-});
-
-// update department
-db.query(
-  'UPDATE department SET name =? WHERE id =?',
-  ['Sales', 1],
-  (err, data) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send(data);
-    }
-  }
-);
-
-// delete department
-db.query('DELETE FROM department WHERE id =?', [1], (err, data) => {
-  if (err) {
-    res.send(err);
-  } else {
-    res.send(data);
-  }
-});
-// query role table in database
-db.query('SELECT * FROM role', function (err, results) {
-  console.log(results);
-});
-
-// create role
-db.query(
-  'INSERT INTO role (title, salary, department_id) VALUES (?,?,?)',
-  ['Sales Lead', 100000, 1],
-  (err, data) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send(data);
-    }
-  }
-);
-
-// update role
-db.query(
-  'UPDATE role SET title =?, salary =?, department_id =? WHERE id =?',
-  ['Sales Lead', 100000, 1, 1],
-  (err, data) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send(data);
-    }
-  }
-);
-
-// delete role
-db.query('DELETE FROM role WHERE id =?', [1], (err, data) => {
-  if (err) {
-    res.send(err);
-  } else {
-    res.send(data);
-  }
-});
-
-// query employee table in database
-db.query('SELECT * FROM employee', function (err, results) {
-  console.log(results);
-});
-
-// create employee
-// db.query(
-//   'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)',
-//   [
-//     req.body.first_name,
-//     req.body.last_name,
-//     req.body.role_id,
-//     req.body.manager_id,
-//   ],
-//   (err, data) => {
-//     if (err) {
-//       res.send(err);
-//     } else {
-//       res.send(data);
-//     }
-//   }
-// );
-
-// update employee
-// db.query(
-//   'UPDATE employee SET first_name =?, last_name =?, role_id =?, manager_id =? WHERE id =?',
-//   [
-//     req.body.first_name,
-//     req.body.last_name,
-//     req.body.role_id,
-//     req.body.manager_id,
-//     req.body.id,
-//   ],
-//   (err, data) => {
-//     if (err) {
-//       res.send(err);
-//     } else {
-//       res.send(data);
-//     }
-//   }
-// );
-
-// delete employee
-db.query('DELETE FROM employee WHERE id =?', [1], (err, data) => {
-  if (err) {
-    res.send(err);
-  } else {
-    res.send(data);
-  }
-});
-
-// create role
-// app.post('/api/roles', (req, res) => {
-//   db.query(
-//     'INSERT INTO role (title, salary, department_id) VALUES (?,?,?)',
-//     [req.body.title, req.body.salary, req.body.department_id],
-//     (err, data) => {
-//       if (err) {
-//         res.send(err);
-//       } else {
-//         res.send(data);
-//       }
-//     }
-//   );
-// });
-
-// // update role
-// app.put('/api/roles/:id', (req, res) => {
-//   db.query(
-//     'UPDATE role SET title =?, salary =?, department_id =? WHERE id =?',
-//     [req.body.title, req.body.salary, req.body.department_id, req.params.id],
-//     (err, data) => {
-//       if (err) {
-//         res.send(err);
-//       } else {
-//         res.send(data);
-//       }
-//     }
-//   );
-// });
-
-// // delete role
-// app.delete('/api/roles/:id', (req, res) => {
-//   db.query('DELETE FROM role WHERE id =?', req.params.id, (err, data) => {
-//     if (err) {
-//       res.send(err);
-//     } else {
-//       res.send(data);
-//     }
-//   });
-// });
+const init = () => {
+  const questions = inquirer;
+  questions
+    .prompt({
+      type: 'list',
+      name: 'action',
+      message: 'What would you like to do?',
+      choices: [
+        'View All Employees',
+        'View All Employees By Department',
+        'View All Employees By Manager',
+        'Add Employee',
+        'Remove Employee',
+        'Update Employee Role',
+        'Update Employee Manager',
+        'View All Roles',
+        'Add Role',
+        'Remove Role',
+        'View All Departments',
+        'Add Department',
+        'Remove Department',
+        'Quit',
+      ],
+    })
+    .then((answer) => {
+      if (answer.action === 'View All Employees') {
+        viewAllEmployees();
+      } else if (answer.action === 'View All Employees By Department') {
+        viewAllEmployeesByDepartment();
+      } else if (answer.action === 'View All Employees By Manager') {
+        viewAllEmployeesByManager();
+      } else if (answer.action === 'Add Employee') {
+        addEmployee();
+      } else if (answer.action === 'Remove Employee') {
+        removeEmployee();
+      } else if (answer.action === 'Update Employee Role') {
+        updateEmployeeRole();
+      } else if (answer.action === 'Update Employee Manager') {
+        updateEmployeeManager();
+      } else if (answer.action === 'View All Roles') {
+        viewAllRoles();
+      } else if (answer.action === 'Add Role') {
+        addRole();
+      } else if (answer.action === 'Remove Role') {
+        removeRole();
+      } else if (answer.action === 'View All Departments') {
+        viewAllDepartments();
+      } else if (answer.action === 'Add Department') {
+        addDepartment();
+      } else if (answer.action === 'Remove Department') {
+        removeDepartment();
+      } else if (answer.action === 'Quit') {
+        db.end();
+      }
+    });
+};
 
 // Default response for any other request (Not Found)
-app.use((req, res) => {
-  res.status(404).end();
-});
+// app.use((req, res) => {
+//   res.status(404).end();
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+init();
