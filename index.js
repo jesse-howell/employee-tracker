@@ -38,7 +38,10 @@ const init = () => {
     })
     .then((answer) => {
       if (answer.action === 'View All Employees') {
-        viewAllEmployees();
+        db.query('SELECT * FROM employee', (err, employee) => {
+          if (err) throw err;
+          console.table(employee);
+        });
       } else if (answer.action === 'View All Employees By Department') {
         viewAllEmployeesByDepartment();
       } else if (answer.action === 'View All Employees By Manager') {
