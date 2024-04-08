@@ -5,14 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index",
-    "seed": "node db/seeds.sql"
+    "start": "node index"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "inquirer": "^8.2.4",
-    "mysql2": "^3.7.1"
+    "mysql2": "^3.9.3",
+    "seed": "^0.4.4"
   }
 }

@@ -31,7 +31,13 @@ VALUES
     (16, 'Operations Specialist', 175000, 8);
 
 INSERT INTO
-    employee (id, first_name, last_name, role_id, manager_id)
+    employee (
+        id,
+        'first_name',
+        'last_name',
+        role_id,
+        manager_id
+    )
 VALUES
     (1, 'John', 'Doe', 1, 3),
     (2, 'Mike', 'Chan', 2, 1),

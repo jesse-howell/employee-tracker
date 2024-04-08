@@ -1,7 +1,11 @@
 // import inquirer and mysql
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
+const fs = require('fs');
 
+const seedQuery = fs.readFileSync('db/seeds.sql', {
+  encoding: 'utf-8',
+});
 // connect to database
 const db = mysql.createConnection(
   {
@@ -11,6 +15,8 @@ const db = mysql.createConnection(
   },
   console.log('Connected to the employee_db database.')
 );
+
+db.connect();
 
 const init = () => {
   const questions = inquirer;
@@ -72,6 +78,11 @@ const init = () => {
     });
 };
 
+db.query(seedQuery, (err) => {
+  if (err) {
+    throw err;
+  }
+});
 // Default response for any other request (Not Found)
 // app.use((req, res) => {
 //   res.status(404).end();
